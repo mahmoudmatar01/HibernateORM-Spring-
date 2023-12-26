@@ -62,10 +62,10 @@ With Hibernate, the process becomes more streamlined:
 
 Setting up a new Hibernate project involves several steps, including configuring dependencies, creating Hibernate configuration files, defining entity classes, and integrating Hibernate into your application. Below is a step-by-step guide to help you set up a new Hibernate project:
 
-1. **Step 1: Create a New Java Project**
+### 1. **Step 1: Create a New Java Project**
    - Start by creating a new Java project using your preferred IDE (Integrated Development Environment) such as Eclipse, IntelliJ, or any other. Configure the project settings according to your preferences.
 
-2. **Step 2: Add Hibernate Dependencies**
+### 2. **Step 2: Add Hibernate Dependencies**
    - Include the Hibernate dependencies in your project. You can use a build tool like Maven or Gradle to manage dependencies. Add the following dependencies to your project's pom.xml file if you are using Maven:
    - Maven Dependency for Hibernate:
      
@@ -94,7 +94,7 @@ Setting up a new Hibernate project involves several steps, including configuring
 </dependencies>
 ```
 
-3. **Step 3: Create Hibernate Configuration File**
+### 3. **Step 3: Create Hibernate Configuration File**
    - Create a Hibernate configuration file named `hibernate.cfg.xml.` This file contains information about the database connection, dialect, and other settings. Place this file in the `src` or `resources `directory of your project.
      
   ```xml
@@ -123,7 +123,16 @@ Setting up a new Hibernate project involves several steps, including configuring
 </hibernate-configuration>
 ```
 
-4. **Step 4: Create Entity Class**
+### `hbm2ddl` Configuration :
+
+#### `hibernate.hbm2ddl.auto` Property
+The `hibernate.hbm2ddl.auto` property controls the behavior of Hibernate regarding the database schema. Common values include:
+
+- `update:` Update the schema if necessary when the session factory is created.
+- `create:` Create the schema, destroying previous data.
+- `validate:` Validate the schema, but do not make any changes.
+
+### 4. **Step 4: Create A Simple Entity Class**
 Create a Java class representing your entity (table) and annotate it with Hibernate annotations. This class will be mapped to a database table.
 
 ```java
@@ -151,7 +160,59 @@ public class Employee {
 }
 ```
 
-5. **Step 5: Hibernate Utility Class**
+### Name Annotations
+
+#### `@Entity` Annotation
+
+The `@Entity` annotation is used to mark a Java class as an entity. This means it will be persisted in the database. Example:
+
+```java
+@Entity
+public class Employee {
+    @Id
+    private Long id;
+    // Other fields and methods...
+}
+```
+
+#### `@Table` Annotation
+
+The `@Table` annotation is used to specify the details of the database table to which an entity is mapped. Example:
+
+
+```java
+@Entity
+@Table(name = "employee_table")
+public class Employee {
+    @Id
+    private Long id;
+    // Other fields and methods...
+}
+```
+
+#### ``@Column Annotation
+
+The `@Column` annotation is used to specify the details of a database column to which a field or property is mapped. Example:
+
+```java
+@Entity
+public class Employee {
+    @Id
+    private Long id;
+
+    @Column(name = "employee_name", length = 100, nullable = false)
+    private String name;
+
+    @Column(name = "salary")
+    private double salary;
+    // Other fields and methods...
+}
+
+```
+
+
+
+### 5. **Step 5: Hibernate Utility Class**
 Now, you can use Hibernate in your application to perform database operations. Create a Hibernate session, and use it to save, update, and query your entities.
 
 ```java
@@ -175,7 +236,7 @@ public class HibernateUtil {
 }
 ```
 
-6. **Step 6: Use Hibernate in Your Application**
+### 6. **Step 6: Use Hibernate in Your Application**
 Now, you can use Hibernate in your application to perform database operations. Create a Hibernate session, and use it to save, update, and query your entities.
 
  *Using the Hibernate Api :*
@@ -186,12 +247,19 @@ Now, you can use Hibernate in your application to perform database operations. C
         
 
 ```java
-public class Main {
+public class HibernateTest {
     public static void main(String[] args) {
 
+//      Take an instance from Employee Entity and set initial values
         Employee employee=new Employee();
         employee.setId(1L);
         employee.setName("Mahmoud Matar");
+
+//        Using the Hibernate Api
+
+//        1. create a session factory
+//        2. create a session from the session factory
+//        3. use the session to save model objects
 
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
@@ -202,7 +270,6 @@ public class Main {
 }
 ```
 
-
-7. **Step 7: Run and Test**
+### 7. **Step 7: Run and Test**
 Run your application and test the Hibernate setup by performing CRUD operations on your entity.
 
