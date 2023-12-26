@@ -274,3 +274,68 @@ public class HibernateTest {
 ### 7. **Step 7: Run and Test**
 Run your application and test the Hibernate setup by performing CRUD operations on your entity.
 
+
+
+## More Annotations
+
+### `@Temporal` Annotation
+The `@Temporal` annotation is used to declare the type of a temporal field (date, time, timestamp). It allows you to specify whether the field should be mapped as `DATE`, `TIME`, or `TIMESTAMP`. Example:
+
+```java
+@Entity
+public class Employee {
+    @Id
+    private Long id;
+
+    private String name;
+
+    @Temporal(TemporalType.DATE)
+    private Date joinDate;
+
+    // Other fields and methods...
+}
+```
+In this example, the `joinDate` field will be mapped as a DATE in the database.
+
+### `@Lob` Annotation
+The `@Lob` annotation is used to map a large object (LOB) field to a database-supported large object type. It is often used for mapping `CLOB` (Character Large Object) and `BLOB` (Binary Large Object) fields. Example:
+
+```java
+@Entity
+public class Employee {
+    @Id
+    private Long id;
+
+    private String name;
+
+    @Lob
+    private byte[] photo;
+
+    // Other fields and methods...
+}
+```
+In this example, the `photo` field will be mapped as a BLOB in the database.
+
+
+### `@Transient` Annotation
+The `@Transient` annotation is used to mark a field as not persistable. Fields marked with `@Transient` will not be stored in the database. Example:
+
+```java
+@Entity
+public class Employee {
+    @Id
+    private Long id;
+
+    private String firstName;
+    private String lastName;
+
+    @Transient
+    private String fullName; // This field will not be stored in the database
+
+    // Other fields and methods...
+}
+
+```
+In this example, the `fullName` field will not be persisted in the database.
+
+
