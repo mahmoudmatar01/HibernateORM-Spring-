@@ -339,3 +339,30 @@ public class Employee {
 In this example, the `fullName` field will not be persisted in the database.
 
 
+## Retrieving Objects using `session.get`
+
+In Hibernate, the `session.get` method is used to retrieve an object from the database based on its primary key. This method is particularly useful when you want to fetch an entity by its unique identifier. Here's an example demonstrating the usage of `session.get`:
+
+```java
+// Retrieving Objects using session.get
+employee = null;
+session = HibernateUtil.getSessionFactory().openSession();
+session.beginTransaction();
+employee = session.get(Employee.class, 1);
+System.out.println("Employee Name Retrieved From Database: " + employee.getName());
+```
+
+In this example:
+
+`Employee.class:` Specifies the entity type you want to retrieve, in this case, the` Employee` class.
+`1:` Represents the `primary key` value for the desired employee. Adjust this value based on the `primary key` of the entity you are retrieving.
+
+After retrieving the object using `session.get`, you can then access its properties or perform additional operations. It's important to note that if the object is not found in the database, the method returns `null.`
+
+Remember to commit the transaction and close the session after completing your database operations:
+
+```java
+session.getTransaction().commit();
+session.close();
+```
+
