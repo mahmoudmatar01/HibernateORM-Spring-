@@ -1,0 +1,25 @@
+<!-- src/main/resources/hibernate.cfg.xml -->
+<hibernate-configuration>
+
+    <session-factory>
+
+        <!-- Database connection settings for PostgreSQL -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/HibernateDb</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">matar</property>
+
+        <!-- Dialect for PostgreSQL -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!-- Echo all executed statements to stdout -->
+        <property name="hibernate.show_sql">true</property>
+
+        <!-- Drop and re-create the database schema on startup -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Mention annotated class locations -->
+        <mapping class="org.example.Employee"/>
+    </session-factory>
+
+</hibernate-configuration>
