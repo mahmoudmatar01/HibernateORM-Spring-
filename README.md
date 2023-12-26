@@ -71,36 +71,34 @@ Setting up a new Hibernate project involves several steps, including configuring
      
 ```xml
 <dependencies>
-    <!-- Hibernate ORM -->
-    <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-core</artifactId>
-        <version>5.6.0.Final</version> <!-- Check for the latest version -->
-    </dependency>
 
-    <!-- Database Driver (e.g., MySQL) -->
-    <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>8.0.26</version> <!-- Check for the latest version -->
-    </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.4.1.Final</version>
+        </dependency>
 
-    <!-- Connection Pooling (Optional, e.g., HikariCP) -->
-    <dependency>
-        <groupId>com.zaxxer</groupId>
-        <artifactId>HikariCP</artifactId>
-        <version>4.0.3</version> <!-- Check for the latest version -->
-    </dependency>
-</dependencies>
+
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.1</version>
+        </dependency>
+
+ </dependencies>
+
 ```
 
 ### 3. **Step 3: Create Hibernate Configuration File**
    - Create a Hibernate configuration file named `hibernate.cfg.xml.` This file contains information about the database connection, dialect, and other settings. Place this file in the `src` or `resources `directory of your project.
      
   ```xml
-     <!-- src/hibernate.cfg.xml -->
-<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<!-- src/main/resources/hibernate.cfg.xml -->
 <hibernate-configuration>
+
+    <session-factory>
 
     <!-- Database connection settings -->
     <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
@@ -120,7 +118,10 @@ Setting up a new Hibernate project involves several steps, including configuring
     <!-- Mention annotated class locations -->
     <mapping class="com.example.YourEntityClass"/>
 
+    </session-factory>
+
 </hibernate-configuration>
+
 ```
 
 ### `hbm2ddl` Configuration :
