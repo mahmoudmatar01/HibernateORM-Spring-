@@ -191,7 +191,7 @@ public class Employee {
 }
 ```
 
-#### ``@Column Annotation
+#### `@Column` Annotation
 
 The `@Column` annotation is used to specify the details of a database column to which a field or property is mapped. Example:
 
