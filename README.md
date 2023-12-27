@@ -396,3 +396,307 @@ Hibernate supports various strategies for generating primary key values. Some co
 - `GenerationType.IDENTITY`: Uses an identity column in the database (auto-increment in MySQL, serial in PostgreSQL).
 - `GenerationType.SEQUENCE`: Uses a database sequence.
 - `GenerationType.AUTO`: Lets Hibernate choose the appropriate strategy based on the underlying database.
+
+
+## Value Types and Embedding Objects
+
+In Hibernate, value types and embedding objects allow you to model complex data structures in your entities. These concepts are essential for creating flexible and normalized database schemas.
+
+### Value Types
+
+A value type is an object that represents a descriptive aspect of the domain with no conceptual identity. Value types are owned by an entity and are used to model attributes of that entity. Hibernate allows you to define custom value types using the `@Embeddable` annotation.
+
+Here's an example of using a value type with `@Embeddable`:
+
+```java
+@Embeddable
+public class Address {
+    private String street;
+    private String city;
+    private String zipCode;
+
+    // Getters and setters...
+}
+
+@Entity
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @Embedded
+    private Address address;
+
+    // Other fields and methods...
+}
+```
+
+In this example, the Address class is marked with @Embeddable, and it is then embedded in the Employee entity using the @Embedded annotation.
+
+### Embedding Objects
+
+Embedding objects involve including the properties of one class into another. This is useful when you want to group related fields together. Hibernate provides the `@Embeddable` and `@Embedded` annotations for handling embedded objects.
+
+Here's an example of embedding an object in an entity:
+```java
+@Embeddable
+public class ContactInformation {
+    private String email;
+    private String phoneNumber;
+
+    // Getters and setters...
+}
+
+@Entity
+public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @Embedded
+    private ContactInformation contactInformation;
+
+    // Other fields and methods...
+}
+```
+In this example, the ContactInformation class is marked with` @Embeddable`, and it is embedded in the Customer entity using the `@Embedded` annotation.
+
+
+## AttributeOverrides and Embedded Object Keys
+
+In Hibernate, `AttributeOverrides` and embedded object keys allow you to customize the mapping of attributes within an embedded object. This is particularly useful when you need to handle scenarios where the same embedded type is used in multiple places with different attribute mappings.
+
+### AttributeOverrides
+
+The `@AttributeOverrides` annotation in Hibernate allows you to override the mapping of attributes defined in an embedded object when it is used within an entity. This can be handy when you want to reuse an embedded object but need different column names or configurations in different contexts.
+
+Here's an example of using `@AttributeOverrides`:
+
+```java
+@Embeddable
+public class Address {
+    private String street;
+    private String city;
+    private String zipCode;
+
+    // Getters and setters...
+}
+
+@Entity
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "street", column = @Column(name = "home_street")),
+        @AttributeOverride(name = "city", column = @Column(name = "home_city")),
+        @AttributeOverride(name = "zipCode", column = @Column(name = "home_zip_code"))
+    })
+    private Address homeAddress;
+
+    // Other fields and methods...
+}
+```
+In this example, the Employee entity embeds an Address object (homeAddress) and uses @AttributeOverrides to customize the column names for the street, city, and zipCode attributes.
+
+### Embedded Object Keys
+When using an embedded object as part of the primary key of an entity, you can leverage @EmbeddedId to declare an embedded identifier. This is useful when you want to create composite primary keys using an embedded object.
+
+Here's an example of using `@EmbeddedId`:
+
+```java
+@Embeddable
+public class EmployeeId implements Serializable {
+    private String department;
+    private Long employeeNumber;
+
+    // Getters and setters...
+}
+
+@Entity
+public class Employee {
+    @EmbeddedId
+    private EmployeeId employeeId;
+
+    private String name;
+
+    // Other fields and methods...
+}
+```
+In this example, the Employee entity uses an embedded identifier (EmployeeId) as part of its primary key.
+
+
+
+## Saving Collections
+
+In Hibernate, you often need to model relationships between entities where one entity has a collection of another entity. This section explores how to save and manage collections in Hibernate entities.
+
+### Saving a Collection of Elements
+
+### One-to-Many Relationship
+
+In a one-to-many relationship, an entity can have multiple instances of another entity. Hibernate provides the `@OneToMany` annotation to represent this relationship.
+
+Here's an example:
+
+```java
+@Entity
+public class Department {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Employee> employees = new ArrayList<>();
+
+    // Other fields and methods...
+}
+
+@Entity
+@Table(name = "employee_table")
+public class Employee {
+    @Id
+    private Long id;
+
+    @Column(name = "employee_name", length = 100, nullable = false)
+    private String name;
+    
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    // Other fields and methods...
+}
+```
+In this example, the Department entity has a one-to-many relationship with Employee. The employees field in the Department entity represents the collection of employees in that department. The @OneToMany annotation specifies the mapping, and cascade = CascadeType.ALL ensures that changes to the collection are cascaded to the database.
+
+Here Test Calss
+```java
+public class HibernateTest {
+    public static void main(String[] args) {
+
+//      Take an instance from Employee Entity and set initial values
+        Employee employee=new Employee();
+        employee.setId(1L);
+        employee.setName("Mahmoud Matar");
+
+//      Take an instance from Department Entity and set initial values
+        Department department=new Department();
+        department.setName("Human Resource");
+
+//      Set the employee department to employee in One To Many Relationship
+        employee.setDepartment(department);
+        department.getEmployees().add(employee);
+
+
+//        Using the Hibernate Api
+
+        // create a session factory and create a session from the session factory
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        // save model objects
+        session.save(department);
+        session.save(employee);
+        session.getTransaction().commit();
+        session.close();
+
+        // Retrieving Objects using session.get
+        employee=null;
+        session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        employee=session.get(Employee.class,1);
+        session.getTransaction().commit();
+        session.close();
+        System.out.println("Employee Name Retrieved From Database : "+employee.getName());
+        System.out.println(employee.getName()+ " in department: "+employee.getDepartment().getName());
+        System.out.println(department.getName()+" has First employee : "+department.getEmployees().get(0).getName());
+
+    }
+}
+```
+
+
+### Many-to-Many Relationship
+
+In a many-to-many relationship, entities can have multiple instances of each other. Hibernate provides the @ManyToMany annotation to represent this relationship.
+
+Here's an example:
+```java
+@Entity
+public class Manger {
+    @Id
+    private Long id;
+    private String Name;
+
+    @ManyToMany
+    @JoinTable(
+            name = "manger_employee",
+            joinColumns = @JoinColumn(name = "manger_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
+    private List<Employee> employeeList=new ArrayList<>();
+
+    // setter and getter
+}
+
+@Entity
+@Table(name = "employee_table")
+public class Employee {
+    @Id
+    private Long id;
+    @Column(name = "employee_name", length = 100, nullable = false)
+    private String name;
+
+    @ManyToMany(mappedBy = "employeeList", cascade = CascadeType.ALL)
+    private List<Manger> mangerList=new ArrayList<>();
+
+    // setter and getter
+}
+
+``` 
+
+### One to One Relationship
+In a one-to-one relationship, each record in a table is related to only one record in another table. Hibernate provides the @OneToOne annotation to represent this relationship.
+
+Here's an example:
+
+```java
+@Entity
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+    // Other fields and methods...
+}
+
+@Entity
+public class Address {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String street;
+
+    // Other fields and methods...
+}
+```
+In this example, the Employee entity has a one-to-one relationship with the Address entity. The address field in the Employee entity represents the associated address, and @OneToOne(cascade = CascadeType.ALL) ensures that changes to the address are cascaded to the database.
+
+
