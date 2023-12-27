@@ -700,3 +700,120 @@ public class Address {
 In this example, the Employee entity has a one-to-one relationship with the Address entity. The address field in the Employee entity represents the associated address, and @OneToOne(cascade = CascadeType.ALL) ensures that changes to the address are cascaded to the database.
 
 
+
+## Implementing Inheritance
+
+Inheritance is a powerful concept in object-oriented programming, and Hibernate provides support for implementing inheritance in your entity mappings. In this tutorial section, we'll explore how to model inheritance using Hibernate.
+
+### Table Per Hierarchy (Single Table Strategy)
+
+Table Per Hierarchy is a strategy where all classes in an inheritance hierarchy are mapped to a single database table. Discriminator column differentiates between different types of entities in the table.
+
+### Example:
+
+```java
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "employee_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    
+    // Common fields and methods...
+}
+
+@Entity
+@DiscriminatorValue("FT_EMPLOYEE")
+public class FullTimeEmployee extends Employee {
+    private BigDecimal salary;
+    
+    // Additional fields and methods specific to FullTimeEmployee...
+}
+
+@Entity
+@DiscriminatorValue("PT_EMPLOYEE")
+public class PartTimeEmployee extends Employee {
+    private BigDecimal hourlyRate;
+    
+    // Additional fields and methods specific to PartTimeEmployee...
+}
+```
+In this example, `Employee` is an abstract class, and `FullTimeEmployee` and `PartTimeEmployee` are concrete subclasses. The discriminator column `(employee_type)` is used to differentiate between the types.
+
+
+### Table Per Class Hierarchy (Joined Table Strategy)
+
+Table Per Class Hierarchy is a strategy where each class in an inheritance hierarchy is mapped to its own database table. There is a common table for shared attributes.
+
+### Example :
+
+```java
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    
+    // Common fields and methods...
+}
+
+@Entity
+public class FullTimeEmployee extends Employee {
+    private BigDecimal salary;
+    
+    // Additional fields and methods specific to FullTimeEmployee...
+}
+
+@Entity
+public class PartTimeEmployee extends Employee {
+    private BigDecimal hourlyRate;
+    
+    // Additional fields and methods specific to PartTimeEmployee...
+}
+```
+
+In this example, there is a common table for shared attributes in the `Employee` class, and each subclass has its own table.
+
+
+### Table Per Concrete Class
+
+Table Per Concrete Class is a strategy where each concrete class in an inheritance hierarchy is mapped to its own database table, including the fields inherited from the superclass.
+
+### Example :
+
+```java
+@Entity
+public class FullTimeEmployee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    
+    private BigDecimal salary;
+    
+    // Additional fields and methods specific to FullTimeEmployee...
+}
+
+@Entity
+public class PartTimeEmployee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    
+    private BigDecimal hourlyRate;
+    
+    // Additional fields and methods specific to PartTimeEmployee...
+}
+```
+
+In this example, there is no common superclass table, and each concrete class has its own table.
+
