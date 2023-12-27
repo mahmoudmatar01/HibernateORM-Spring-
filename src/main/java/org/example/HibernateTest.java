@@ -73,14 +73,27 @@ public class HibernateTest {
         manger = session.get(Manger.class, 1);
         manger2 = session.get(Manger.class, 2);
 
+//      Initialize lists
+        manger2.getEmployeeList().size();
+        manger.getEmployeeList().size();
+
         session.getTransaction().commit();
         session.close();
 
         System.out.println("Employee Name Retrieved From Database : "+employee.getName());
         System.out.println(employee.getName()+ " have a Cv id : "+employee.getEmployeeAddress().getId());
         System.out.println(employee.getName()+ " in department: "+employee.getDepartment().getName());
-        System.out.println(employee.getName()+ "'s Manger name "+employee.getMangerList().get(0).getName());
-        System.out.println(department.getName()+" has First employee : "+department.getEmployees().get(0).getName());
-
+        System.out.println(department.getName()+" has employee : ");
+        for (Employee employee1:department.getEmployees()){
+            System.out.println(employee1.getName());
+        }
+        System.out.println(manger.getName()+" Mange : ");
+        for(Employee employee1:manger.getEmployeeList()){
+            System.out.println(employee1.getName());
+        }
+        System.out.println(manger2.getName()+" Mange : ");
+        for(Employee employee1:manger2.getEmployeeList()){
+            System.out.println(employee1.getName());
+        }
     }
 }
