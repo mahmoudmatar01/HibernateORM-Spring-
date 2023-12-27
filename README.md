@@ -903,3 +903,69 @@ session.getTransaction().commit();
 session.close();
 ```
 
+
+## Transient, Persistent, and Detached Objects
+
+In Hibernate, objects are classified into three states: Transient, Persistent, and Detached. Understanding these states is crucial for managing the lifecycle of your entities.
+
+### Transient Objects
+
+Objects that are not associated with any Hibernate session are considered transient. These objects are not in the scope of Hibernate's management. When you create a new object using the `new` keyword, it is in a transient state.
+
+Example of creating a transient object:
+
+```java
+// Creating a transient object
+Employee transientEmployee = new Employee();
+transientEmployee.setName("John Doe");
+// 'transientEmployee' is now in a transient state
+```
+
+### Persistent Objects
+
+Objects that are associated with a Hibernate session and have been saved or loaded from the database are considered persistent. Hibernate manages persistent objects, and any changes made to these objects are automatically synchronized with the database during the transaction.
+
+Example of making an object persistent:
+
+```java
+// Open a Hibernate session and start a transaction
+Session session = HibernateUtil.getSessionFactory().openSession();
+session.beginTransaction();
+
+// Creating a persistent object
+Employee persistentEmployee = new Employee();
+persistentEmployee.setName("Jane Doe");
+
+// Save the persistent object to the database
+session.save(persistentEmployee);
+
+// Commit the transaction and close the session
+session.getTransaction().commit();
+session.close();
+// 'persistentEmployee' is now in a persistent state
+```
+
+### Detached Objects
+
+Objects that were once persistent but are no longer associated with a Hibernate session are considered detached. This can happen when a session is closed, or an object is explicitly evicted from the session.
+
+Example of making an object detached:
+
+```java
+// Open a Hibernate session and start a transaction
+Session session = HibernateUtil.getSessionFactory().openSession();
+session.beginTransaction();
+
+// Creating a persistent object
+Employee persistentEmployee = new Employee();
+persistentEmployee.setName("Jane Doe");
+
+// Save the persistent object to the database
+session.save(persistentEmployee);
+
+// Commit the transaction and close the session
+session.getTransaction().commit();
+session.close();
+
+// 'persistentEmployee' is now in a detached state
+```
