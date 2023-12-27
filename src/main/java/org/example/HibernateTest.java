@@ -1,17 +1,14 @@
 package org.example;
 
-import org.example.models.Address;
-import org.example.models.Department;
-import org.example.models.Employee;
-import org.example.models.Manger;
+import org.example.models.*;
 import org.example.utils.HibernateUtil;
 import org.hibernate.Session;
 
-import java.util.List;
 
 
 public class HibernateTest {
     public static void main(String[] args) {
+
 
 //      Take an instance from Employee Entity and set initial values
         Employee employee=new Employee();
@@ -28,12 +25,24 @@ public class HibernateTest {
 //      Take an instance from Department Entity and set initial values
         Department department=new Department();
         department.setName("Human Resource");
-//      Take an instance from Department Entity and set initial values
+
+//      Take an instance from Manger Entity and set initial values
         Manger manger=new Manger();
         manger.setName("Mr. Ahmed");
 
         Manger manger2=new Manger();
         manger2.setName("Mr. Mustafa");
+
+//      Take an instance from FullTime employee
+        FullTimeEmployee fullTimeEmployee=new FullTimeEmployee();
+        fullTimeEmployee.setName("Mustafa Matar");
+        fullTimeEmployee.setSalary(12);
+
+//      Take an instance from FullTime employee
+        PartTimeEmployee partTimeEmployee=new PartTimeEmployee();
+        partTimeEmployee.setName("Mohamed Matar");
+        partTimeEmployee.setSalary(13);
+
 
 //      Set the employee cv to employee in One-To-One Relationship
 //      Set the employee department to employee in One-To-Many Relationship
@@ -59,6 +68,8 @@ public class HibernateTest {
         session.save(manger2);
         session.save(employeeAddress);
         session.save(department);
+        session.save(fullTimeEmployee);
+        session.save(partTimeEmployee);
         session.getTransaction().commit();
         session.close();
 
@@ -66,12 +77,16 @@ public class HibernateTest {
         employee=null;
         manger=null;
         manger2=null;
+        fullTimeEmployee=null;
+        partTimeEmployee=null;
         session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
 
         employee = session.get(Employee.class, 1);
         manger = session.get(Manger.class, 1);
         manger2 = session.get(Manger.class, 2);
+        partTimeEmployee = session.get(PartTimeEmployee.class, 4);
+        fullTimeEmployee = session.get(FullTimeEmployee.class, 3);
 
 //      Initialize lists
         manger2.getEmployeeList().size();
@@ -95,5 +110,8 @@ public class HibernateTest {
         for(Employee employee1:manger2.getEmployeeList()){
             System.out.println(employee1.getName());
         }
+        System.out.println("Part Time Employee name "+partTimeEmployee.getName()+" and it salary : "+partTimeEmployee.getSalary());
+        System.out.println("Full Time Employee name "+fullTimeEmployee.getName()+" and it salary : "+fullTimeEmployee.getSalary());
+
     }
 }

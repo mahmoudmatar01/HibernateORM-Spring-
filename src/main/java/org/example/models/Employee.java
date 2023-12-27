@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn(name = "employee_type", discriminatorType = DiscriminatorType.STRING)
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
