@@ -969,3 +969,115 @@ session.close();
 
 // 'persistentEmployee' is now in a detached state
 ```
+
+
+## Hibernate Tutorial - Introduction to HQL and the Query Object
+
+Hibernate Query Language (HQL) is a powerful query language provided by Hibernate for performing database operations using object-oriented syntax. It allows developers to write queries in terms of entity classes and their properties rather than native SQL.
+
+### HQL Basics
+
+HQL is similar to SQL but uses the names of Java classes and properties instead of database tables and columns. It operates on persistent objects and their properties, making it more abstract and object-oriented.
+
+### Example HQL Query
+
+```java
+// Open a Hibernate session and start a transaction
+Session session = HibernateUtil.getSessionFactory().openSession();
+session.beginTransaction();
+
+// HQL query to retrieve all employees with a salary greater than 50000
+String hqlQuery = "FROM Employee WHERE salary > 50000";
+Query<Employee> query = session.createQuery(hqlQuery, Employee.class);
+
+// Execute the query and get the results
+List<Employee> employees = query.getResultList();
+
+// Commit the transaction and close the session
+session.getTransaction().commit();
+session.close();
+
+```
+
+In this example, the HQL query retrieves all Employee objects with a salary greater than 50000. The result is a list of Employee objects.
+
+
+### The Query Object
+
+The Query object in Hibernate is used to execute HQL queries. It provides methods for setting parameters, specifying result types, and executing the query.
+
+### Example Using the Query Object
+
+```java
+// Open a Hibernate session and start a transaction
+Session session = HibernateUtil.getSessionFactory().openSession();
+session.beginTransaction();
+
+// Using the Query object to execute a parameterized HQL query
+Query<Employee> query = session.createQuery("FROM Employee WHERE department = :dept", Employee.class);
+query.setParameter("dept", "IT");
+
+// Execute the query and get the results
+List<Employee> employeesInIT = query.getResultList();
+
+// Commit the transaction and close the session
+session.getTransaction().commit();
+session.close();
+```
+
+In this example, the Query object is used to execute a parameterized HQL query, retrieving all Employee objects in the "IT" department.
+
+
+## Hibernate Tutorial - Named Queries
+
+Named Queries in Hibernate provide a way to define and reuse queries by assigning a name to them. This enhances code readability, promotes maintainability, and allows for better organization of queries in your application.
+
+### Defining a Named Query
+
+Named Queries are typically defined in the entity class using annotations. Here's an example:
+
+```java
+@Entity
+@NamedQuery(
+    name = "findEmployeeByDepartment",
+    query = "FROM Employee WHERE department = :dept"
+)
+public class Employee {
+    // Entity properties and methods...
+}
+```
+
+In this example, a named query named "findEmployeeByDepartment" is defined for the Employee entity. It retrieves all employees based on the specified department.
+
+
+### Using a Named Query
+
+You can then use the named query in your code as follows:
+
+```java
+// Open a Hibernate session and start a transaction
+Session session = HibernateUtil.getSessionFactory().openSession();
+session.beginTransaction();
+
+// Using the named query to retrieve employees in the "IT" department
+List<Employee> employeesInIT = session
+    .createNamedQuery("findEmployeeByDepartment", Employee.class)
+    .setParameter("dept", "IT")
+    .getResultList();
+
+// Commit the transaction and close the session
+session.getTransaction().commit();
+session.close();
+```
+
+By using named queries, you can encapsulate the query logic within your entity classes and refer to them by name when needed.
+
+### Benefits of Named Queries
+
+1. `Code Organization`: Named Queries help organize your query logic within entity classes, making it easier to locate and maintain queries.
+
+2. `Reusability`: Named Queries can be reused across different parts of your application, promoting code reuse.
+
+3. `Readability`: The use of named queries in code enhances readability and reduces the verbosity of query strings directly within the code.
+
+
