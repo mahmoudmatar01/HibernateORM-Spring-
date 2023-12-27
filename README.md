@@ -817,3 +817,89 @@ public class PartTimeEmployee {
 
 In this example, there is no common superclass table, and each concrete class has its own table.
 
+
+## CRUD Operations
+
+In this section, we'll cover the basic CRUD operations using Hibernate. For the purpose of this tutorial, we'll use a simple `Employee` entity as an example.
+
+### Create (Insert) Operation
+
+To save a new employee into the database:
+
+```java
+// Create a new employee
+Employee newEmployee = new Employee();
+newEmployee.setName("John Doe");
+
+// Open a Hibernate session and start a transaction
+Session session = HibernateUtil.getSessionFactory().openSession();
+session.beginTransaction();
+
+// Save the employee to the database
+session.save(newEmployee);
+
+// Commit the transaction and close the session
+session.getTransaction().commit();
+session.close();
+```
+
+### Read (Select) Operation
+
+To retrieve an employee from the database by ID:
+
+```java
+// Open a Hibernate session and start a transaction
+Session session = HibernateUtil.getSessionFactory().openSession();
+session.beginTransaction();
+
+// Retrieve an employee by ID
+Employee retrievedEmployee = session.get(Employee.class, 1);
+
+// Commit the transaction and close the session
+session.getTransaction().commit();
+session.close();
+
+// Access the retrieved employee
+System.out.println("Employee Name: " + retrievedEmployee.getName());
+```
+
+### Update Operation
+
+To update an existing employee in the database:
+
+```java
+// Open a Hibernate session and start a transaction
+Session session = HibernateUtil.getSessionFactory().openSession();
+session.beginTransaction();
+
+// Retrieve the employee to be updated
+Employee employeeToUpdate = session.get(Employee.class, 1);
+
+// Update employee information
+employeeToUpdate.setName("Updated Name");
+
+// Commit the transaction and close the session
+session.getTransaction().commit();
+session.close();
+```
+
+### Delete Operation
+
+To delete an employee from the database:
+
+```java
+// Open a Hibernate session and start a transaction
+Session session = HibernateUtil.getSessionFactory().openSession();
+session.beginTransaction();
+
+// Retrieve the employee to be deleted
+Employee employeeToDelete = session.get(Employee.class, 1);
+
+// Delete the employee from the database
+session.delete(employeeToDelete);
+
+// Commit the transaction and close the session
+session.getTransaction().commit();
+session.close();
+```
+
