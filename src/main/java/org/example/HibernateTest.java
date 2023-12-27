@@ -23,10 +23,10 @@ public class HibernateTest {
         Manger manger=new Manger();
         department.setName("Mr. Ahmed");
 
-//      Set the employee cv to employee in One To One Relationship
-//      Set the employee department to employee in One To Many Relationship
-//      add the employee to employee deportment in Many To one Relationship
-//      Set the employee manger to employee in Many To Many Relationship
+//      Set the employee cv to employee in One-To-One Relationship
+//      Set the employee department to employee in One-To-Many Relationship
+//      add the employee to employee deportment in Many-To-one Relationship
+//      Set the employee manger to employee in Many-To-Many Relationship
         employee.setEmployeeAddress(employeeAddress);
         employee.setDepartment(department);
         department.getEmployees().add(employee);
