@@ -1,4 +1,4 @@
-package org.example;
+package org.example.models;
 
 import jakarta.persistence.*;
 
@@ -14,7 +14,7 @@ public class Department {
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Employee> employees = new ArrayList<>();
 
-    // setter and getter
+//     setter and getter
 
     public List<Employee> getEmployees() {
         return employees;

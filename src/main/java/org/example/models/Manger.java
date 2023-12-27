@@ -1,4 +1,4 @@
-package org.example;
+package org.example.models;
 
 import jakarta.persistence.*;
 
@@ -8,6 +8,7 @@ import java.util.List;
 @Entity
 public class Manger {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String Name;
 

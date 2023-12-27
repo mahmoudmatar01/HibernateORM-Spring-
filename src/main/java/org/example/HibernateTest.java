@@ -1,6 +1,13 @@
 package org.example;
 
+import org.example.models.Address;
+import org.example.models.Department;
+import org.example.models.Employee;
+import org.example.models.Manger;
+import org.example.utils.HibernateUtil;
 import org.hibernate.Session;
+
+import java.util.List;
 
 
 public class HibernateTest {
@@ -8,7 +15,6 @@ public class HibernateTest {
 
 //      Take an instance from Employee Entity and set initial values
         Employee employee=new Employee();
-        employee.setId(1L);
         employee.setName("Mahmoud Matar");
 
 //      Take an instance from Cv Entity and set initial values
@@ -21,7 +27,7 @@ public class HibernateTest {
         department.setName("Human Resource");
 //      Take an instance from Department Entity and set initial values
         Manger manger=new Manger();
-        department.setName("Mr. Ahmed");
+        manger.setName("Mr. Ahmed");
 
 //      Set the employee cv to employee in One-To-One Relationship
 //      Set the employee department to employee in One-To-Many Relationship
@@ -30,8 +36,8 @@ public class HibernateTest {
         employee.setEmployeeAddress(employeeAddress);
         employee.setDepartment(department);
         department.getEmployees().add(employee);
-        employee.getMangerList().add(manger);
-        manger.getEmployeeList().add(employee);
+        employee.setMangerList(List.of(manger));
+        manger.setEmployeeList(List.of(employee));
 
 
 //        Using the Hibernate Api
@@ -40,26 +46,30 @@ public class HibernateTest {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         // save model objects
+        session.save(employee);
         session.save(manger);
         session.save(employeeAddress);
         session.save(department);
-        session.save(employee);
         session.getTransaction().commit();
         session.close();
 
         // Retrieving Objects using session.get
         employee=null;
+        manger=null;
         session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        employee=session.get(Employee.class,1);
+
+        employee = session.get(Employee.class, 1);
+        manger = session.get(Manger.class, 1);
+
         session.getTransaction().commit();
         session.close();
+
         System.out.println("Employee Name Retrieved From Database : "+employee.getName());
         System.out.println(employee.getName()+ " have a Cv id : "+employee.getEmployeeAddress().getId());
         System.out.println(employee.getName()+ " in department: "+employee.getDepartment().getName());
         System.out.println(employee.getName()+ "'s Manger name "+employee.getMangerList().get(0).getName());
         System.out.println(department.getName()+" has First employee : "+department.getEmployees().get(0).getName());
-        System.out.println(manger.getName()+" mange First employee "+manger.getEmployeeList().get(0).getName());
 
     }
 }

@@ -1,13 +1,14 @@
-package org.example;
+package org.example.models;
 import jakarta.persistence.*;
+import org.example.models.Manger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "employee_table")
 public class Employee {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "employee_name", length = 100, nullable = false)
     private String name;
@@ -18,7 +19,7 @@ public class Employee {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @ManyToMany(mappedBy = "employeeList", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "employeeList", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Manger> mangerList=new ArrayList<>();
 
     // setter and getter

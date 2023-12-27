@@ -19,10 +19,10 @@
         <property name="hibernate.hbm2ddl.auto">create-drop</property>
 
         <!-- Mention annotated class locations -->
-        <mapping class="org.example.Employee"/>
-        <mapping class="org.example.Address"/>
-        <mapping class="org.example.Department"/>
-        <mapping class="org.example.Manger"/>
+        <mapping class="org.example.models.Employee"/>
+        <mapping class="org.example.models.Address"/>
+        <mapping class="org.example.models.Department"/>
+        <mapping class="org.example.models.Manger"/>
     </session-factory>
 
 </hibernate-configuration>
